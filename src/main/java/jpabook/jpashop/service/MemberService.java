@@ -1,6 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
+
 import jpabook.jpashop.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -10,21 +11,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
 @Service
-@RequiredArgsConstructor
+// 클래스 레벨에 선언하면 메서들들은 기본적으로 Transactional 적용
+@Transactional(readOnly = true) // 읽기전용용 트렉젝션(리소스 적게씀)
+@RequiredArgsConstructor // final 로 생성한 필드 생성자(가 제일좋음)
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-/*    //@Autowired 생성자가 클래스에 하나뿐이면 스프링이 자동으로 해줌
-    public MemberService(MemberRepository memberRepository) {
+    
+    /*// @Autowired // 생성자 인젝션이 제일 좋다. 만약 생성자가 클래스에 하나면 자동으로 스프링이 Autowired 해준다.
+    public MemberService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
-    }*/
+    }
+*/
 
-    //회원 가입
+    // 회원 가입
+    @Transactional // readOnly false 가 디폴트임
     public Long join(Member member) {
-        validateDuplicateMember(member); //중복 회원 검증
+        validateDuplicateMember(member); // 중복 회원 검증
         memberRepository.save(member);
         return member.getId();
     }
@@ -34,9 +38,11 @@ public class MemberService {
         if (!findMembers.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
+        // Exception
+
     }
 
-    //회원 전체 조회
+    // 회원 전체 조회
     @Transactional(readOnly = true)
     public List<Member> findMembers() {
         return memberRepository.findAll();

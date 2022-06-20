@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -17,18 +18,20 @@ import static org.junit.Assert.*;
 public class MemberServiceTest {
 
     @Autowired
-    MemberService memberService;
-    @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    MemberService memberService;
 
     @Test
+    //@Rollback(false) // 테스트코드상의 transactional 기본값은 true 값임
     public void memberJoinTest() throws Exception {
-        //given
+        // given
         Member member = new Member();
         member.setName("kim");
-        //when
+        // when
         Long saveId = memberService.join(member);
-        //then
+        // then
+        // em.flush(); // 쿼리가 디비로 강제로 나감
         assertEquals(member, memberRepository.findOne(saveId));
     }
 

@@ -14,6 +14,13 @@ public class MemberRepository {
 
     private final EntityManager em;
 
+    /*@PersistenceContext // Spring이 EntitiyMagager를 만들어서 주입해줌
+    private EntityManager em;
+
+    public MemberRepository(EntityManager em) {
+        this.em = em;
+    }*/
+
     public void save(Member member) {
         em.persist(member);
     }
