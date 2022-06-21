@@ -17,6 +17,9 @@ public class ItemRepository {
         if (item.getId() == null) {
             em.persist(item);
         } else {
+            // 찾아온 item의 값을 모두다 바꺼치기 해버림.
+            // item은 영속성으로 바뀌지않지만  em.merge()의 반환값이 영속성임.
+            // 만약 쓸일이있으면 변수 만들어서 사용.
             em.merge(item);// 나중에 설명 ( update 비스무리함)
         }
     }
